@@ -1,0 +1,8 @@
+{
+  "buildCommand": "vite build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "functions": {
+    "api/[...all].js": { "memory": 512, "maxDuration": 30 }
+  }
+}

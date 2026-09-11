@@ -1,10 +1,17 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-// The dev server runs on 5173; the PROXIM backend (server.js) runs on 3001.
-// The frontend talks to the backend by absolute URL (see VITE_API_URL) so that
-// cookies set by the OAuth callback stay on the backend origin.
+// Single-origin deployment on Vercel: the frontend calls relative /api/*
+// paths, and Vercel routes those to api/[...all].js. In local dev the two
+// run on separate ports (5173 / 3001), so this proxy makes them look
+// same-origin to the browser too — matching production and avoiding CORS.
 export default defineConfig({
   plugins: [react()],
-  server: { port: 5173, strictPort: false },
+  server: {
+    port: 5173,
+    strictPort: false,
+    proxy: {
+      "/api": { target: "http://localhost:3001", changeOrigin: true },
+    },
+  },
 });
